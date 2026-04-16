@@ -1,0 +1,48 @@
+# ── Core backend ──────────────────────────────────────────────────────────────
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+pydantic==2.7.1
+
+# ── Rate limiting + security ───────────────────────────────────────────────────
+slowapi==0.1.9
+
+# ── NLP / Embeddings ──────────────────────────────────────────────────────────
+sentence-transformers==2.7.0
+transformers==4.41.1
+torch==2.3.0              # CPU-only; swap torch==2.3.0+cu118 on GPU instances
+sentencepiece==0.2.0      # Required by flan-t5 tokenizer
+
+# ── Vector search ─────────────────────────────────────────────────────────────
+faiss-cpu==1.8.0          # Use faiss-gpu on CUDA-capable EC2 instances
+
+# ── NLP utilities ─────────────────────────────────────────────────────────────
+nltk==3.8.1               # Sentence tokenization for smarter chunking
+
+# ── Wikipedia data source ─────────────────────────────────────────────────────
+wikipedia==1.4.0
+
+# ── Utilities ─────────────────────────────────────────────────────────────────
+numpy==1.26.4
+
+# ── Auth ──────────────────────────────────────────────────────────────────────
+PyJWT>=2.8.0
+passlib[bcrypt]>=1.7.4
+bcrypt==4.0.1             # passlib is incompatible with bcrypt>=4.1
+tf-keras>=2.16.0          # Required by transformers for flan-t5 on TF/Keras 3
+
+# ── LLM API providers (optional — install the one you use) ────────────────────
+groq>=0.9.0                    # pip install groq            (LLM_PROVIDER=groq) — FREE
+# openai>=1.30.0               # pip install openai          (LLM_PROVIDER=openai)
+# anthropic>=0.28.0            # pip install anthropic       (LLM_PROVIDER=anthropic)
+
+# ── Vector store (optional) ───────────────────────────────────────────────────
+# pinecone-client>=3.0.0       # pip install pinecone-client (VECTOR_STORE=pinecone)
+
+# ── Observability ─────────────────────────────────────────────────────────────
+prometheus-fastapi-instrumentator>=6.1.0
+
+# ── Testing ───────────────────────────────────────────────────────────────────
+pytest==8.2.0
+httpx==0.27.0             # Async test client for FastAPI
+pytest-asyncio==0.23.7
+python-dotenv>=1.0.0

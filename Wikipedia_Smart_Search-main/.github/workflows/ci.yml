@@ -1,0 +1,71 @@
+name: CI / CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ──────────────────────────────────────────────────────────────────────────
+  # Job 1: Run test suite
+  # ──────────────────────────────────────────────────────────────────────────
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run pytest
+        run: pytest tests/ -v --tb=short
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Job 2: Build and push Docker image to Docker Hub
+  # Only runs on push to main (not on PRs) and only after tests pass.
+  #
+  # Required GitHub secrets:
+  #   DOCKERHUB_USERNAME  — your Docker Hub username
+  #   DOCKERHUB_TOKEN     — Docker Hub access token (Settings → Security)
+  # ──────────────────────────────────────────────────────────────────────────
+  docker:
+    name: Build & push Docker image
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          # Tag with both :latest and the short commit SHA for rollbacks
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/wiki-qa:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/wiki-qa:${{ github.sha }}
+          # Layer caching — speeds up subsequent builds
+          cache-from: type=gha
+          cache-to:   type=gha,mode=max

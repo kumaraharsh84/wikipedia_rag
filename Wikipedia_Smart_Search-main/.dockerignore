@@ -1,0 +1,39 @@
+# Git
+.git/
+.gitignore
+
+# CI/CD
+.github/
+
+# Tests (not needed in the image)
+tests/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Local environment / secrets
+.env
+.venv/
+venv/
+env/
+
+# FAISS indexes and logs (mounted as a volume at runtime)
+data/*.faiss
+data/*.pkl
+data/*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docs
+README.md
+
+# Dev scripts (not needed at runtime)
+scripts/

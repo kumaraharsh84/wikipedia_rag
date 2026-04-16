@@ -1,0 +1,111 @@
+version: "3.9"
+
+# ---------------------------------------------------------------------------
+# Usage
+# ---------------------------------------------------------------------------
+# Local build:
+#   docker compose up --build
+#
+# Using pre-built Docker Hub image (recommended for EC2 free tier):
+#   DOCKER_IMAGE=yourdockerhubname/wiki-qa:latest docker compose up -d
+#
+# Or set DOCKER_IMAGE in a .env file (copy from .env.example).
+# ---------------------------------------------------------------------------
+
+x-app: &app-base
+  image: ${DOCKER_IMAGE:-wiki-qa:local}
+  build:
+    context: .
+    dockerfile: Dockerfile
+  restart: unless-stopped
+  environment:
+    - PYTHONUNBUFFERED=1
+    # Limit torch threads to 1 on t2.micro (1 vCPU)
+    - OMP_NUM_THREADS=1
+    - MKL_NUM_THREADS=1
+
+services:
+  backend:
+    <<: *app-base
+    container_name: wiki_backend
+    command: >
+      uvicorn backend.main:app
+        --host 0.0.0.0
+        --port 8000
+        --workers 1
+        --timeout-keep-alive 60
+    ports:
+      - "8000:8000"
+    volumes:
+      - app-data:/app/data          # Persist FAISS index + logs across restarts
+    environment:
+      - PYTHONUNBUFFERED=1
+      - OMP_NUM_THREADS=1
+      - MKL_NUM_THREADS=1
+      # Feature flags — set to "false" on t2.micro to save RAM if needed
+      - ENABLE_RERANKER=${ENABLE_RERANKER:-true}
+      - ENABLE_GENERATOR=${ENABLE_GENERATOR:-true}
+      # Optional API key — leave blank to disable auth
+      - API_KEY=${API_KEY:-}
+    mem_limit: 900m
+    memswap_limit: 2900m            # Uses swap on t2.micro (needs 2 GB swapfile)
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+      start_period: 90s             # Extra time for model warm-up on first boot
+
+  react:
+    image: node:20-alpine
+    container_name: wiki_react
+    working_dir: /app
+    command: sh -c "npm install && npm run build && npx serve -s dist -l 3000"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend_react:/app
+    environment:
+      - VITE_API_BASE=http://backend:8000
+    mem_limit: 512m
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: wiki_prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=7d
+    mem_limit: 256m
+    depends_on:
+      - backend
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: wiki_grafana
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    mem_limit: 256m
+    depends_on:
+      - prometheus
+
+volumes:
+  app-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local

@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  background-color: #0c0e14;
+  color: #e2e2eb;
+  min-height: 100vh;
+}
+
+html { scroll-behavior: smooth; }
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0c0e14; }
+::-webkit-scrollbar-thumb { background: #33343b; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #464554; }
+
+/* Material Symbols */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  line-height: 1;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  user-select: none;
+}
+
+/* Blinking cursor for streaming */
+@keyframes cursor-blink {
+  from, to { border-color: transparent; }
+  50% { border-color: #69f6b8; }
+}
+.cursor-blink {
+  border-right: 2px solid #69f6b8;
+  animation: cursor-blink 1s step-end infinite;
+  padding-right: 2px;
+}
+
+/* Emerald glow tag */
+.emerald-glow-tag {
+  box-shadow: inset 0 0 10px rgba(105,246,184,0.1), 0 0 10px rgba(105,246,184,0.1);
+  border: 1px solid rgba(105,246,184,0.3);
+}
+
+/* Glass panel */
+.glass-panel {
+  background: rgba(23,25,33,0.6);
+  backdrop-filter: blur(20px);
+}
+
+/* Keyword highlight */
+mark {
+  background: rgba(105,246,184,0.2);
+  color: #69f6b8;
+  border-radius: 3px;
+  padding: 0 3px;
+}
+
+/* Markdown prose inside answers */
+.answer-prose h1, .answer-prose h2, .answer-prose h3 {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  color: #e2e2eb;
+  margin-bottom: 0.5rem;
+}
+.answer-prose p { margin-bottom: 0.75rem; line-height: 1.75; }
+.answer-prose ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+.answer-prose li { margin-bottom: 0.25rem; }
+.answer-prose strong { color: #e2e2eb; font-weight: 600; }
+.answer-prose a { color: #69f6b8; text-decoration: underline; }
+.answer-prose code { background: #1d1f27; padding: 0.1rem 0.3rem; border-radius: 4px; font-size: 0.875em; }
+
+/* Animated typing dots */
+@keyframes blink { 0%,80%,100%{opacity:0} 40%{opacity:1} }
+.dot { animation: blink 1.4s infinite both; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }

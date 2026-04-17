@@ -1,10 +1,7 @@
 {
   "name": "wikiqa-vercel-root",
   "private": true,
-  "workspaces": [
-    "frontend_react"
-  ],
   "scripts": {
-    "build": "node scripts/build-vercel.mjs"
+    "build": "npm --prefix frontend_react install && npm --prefix frontend_react run build && node scripts/build-vercel.mjs"
   }
 }

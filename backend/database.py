@@ -5,11 +5,11 @@ Uses Python's built-in sqlite3 — no ORM dependency required.
 
 import sqlite3
 import time
-from pathlib import Path
 from typing import Dict, List, Optional
 
-DATA_DIR = Path(__file__).parent.parent / "data"
-DATA_DIR.mkdir(exist_ok=True)
+from utils.runtime_paths import get_data_dir
+
+DATA_DIR = get_data_dir()
 DB_PATH = DATA_DIR / "wiki_qa.db"
 
 

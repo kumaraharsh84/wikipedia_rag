@@ -28,6 +28,8 @@ services:
   backend:
     <<: *app-base
     container_name: wiki_backend
+    env_file:
+      - .env
     command: >
       uvicorn backend.main:app
         --host 0.0.0.0
@@ -35,7 +37,7 @@ services:
         --workers 1
         --timeout-keep-alive 60
     ports:
-      - "8000:8000"
+      - "8001:8000"
     volumes:
       - app-data:/app/data          # Persist FAISS index + logs across restarts
     environment:
@@ -60,13 +62,13 @@ services:
     image: node:20-alpine
     container_name: wiki_react
     working_dir: /app
-    command: sh -c "npm install && npm run build && npx serve -s dist -l 3000"
+    command: sh -c "npm install && npm run build && npx vite preview --host 0.0.0.0 --port 3000"
     ports:
-      - "3000:3000"
+      - "3002:3000"
     volumes:
       - ./frontend_react:/app
     environment:
-      - VITE_API_BASE=http://backend:8000
+      - VITE_API_BASE=http://localhost:8001
     mem_limit: 512m
     depends_on:
       backend:
@@ -91,7 +93,7 @@ services:
     image: grafana/grafana:latest
     container_name: wiki_grafana
     ports:
-      - "3001:3000"
+      - "3003:3000"
     volumes:
       - grafana-data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro

@@ -1,0 +1,10 @@
+{
+  "name": "wikiqa-vercel-root",
+  "private": true,
+  "workspaces": [
+    "frontend_react"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace frontend_react"
+  }
+}

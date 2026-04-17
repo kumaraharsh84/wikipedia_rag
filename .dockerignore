@@ -18,6 +18,8 @@ __pycache__/
 .venv/
 venv/
 env/
+frontend_react/node_modules/
+frontend_react/dist/
 
 # FAISS indexes and logs (mounted as a volume at runtime)
 data/*.faiss

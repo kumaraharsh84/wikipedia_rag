@@ -27,11 +27,11 @@ import numpy as np
 
 from backend.embeddings import EmbeddingModel
 from utils.logger import get_logger
+from utils.runtime_paths import get_data_dir
 
 logger = get_logger(__name__)
 
-DATA_DIR = Path(__file__).parent.parent / "data"
-DATA_DIR.mkdir(exist_ok=True)
+DATA_DIR = get_data_dir()
 
 # ---------------------------------------------------------------------------
 # Vector store selection

@@ -1,11 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "functions": {
-    "app.py": {
-      "maxDuration": 60,
-      "excludeFiles": "{tests/**,eval/**,grafana/**,scripts/**,frontend_react/**,data/**,.git/**,.github/**,Dockerfile,docker-compose.yml,prometheus.yml,SCALING.md,README.md,api/**}"
-    }
-  }
+  "outputDirectory": "dist"
 }

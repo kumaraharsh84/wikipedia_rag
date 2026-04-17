@@ -5,6 +5,6 @@
     "frontend_react"
   ],
   "scripts": {
-    "build": "npm run build --workspace frontend_react"
+    "build": "node scripts/build-vercel.mjs"
   }
 }

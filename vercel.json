@@ -3,9 +3,9 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "functions": {
-    "api/index.py": {
+    "app.py": {
       "maxDuration": 60,
-      "excludeFiles": "{tests/**,eval/**,grafana/**,scripts/**,frontend_react/**,data/**,.git/**,.github/**,Dockerfile,docker-compose.yml,prometheus.yml,SCALING.md,README.md}"
+      "excludeFiles": "{tests/**,eval/**,grafana/**,scripts/**,frontend_react/**,data/**,.git/**,.github/**,Dockerfile,docker-compose.yml,prometheus.yml,SCALING.md,README.md,api/**}"
     }
   }
 }

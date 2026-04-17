@@ -1,4 +1,4 @@
-const BASE = import.meta.env.VITE_API_BASE || "/api";
+const BASE = import.meta.env.VITE_API_BASE ?? (import.meta.env.DEV ? "/api" : "");
 
 function authHeaders(token) {
   const h = { "Content-Type": "application/json" };

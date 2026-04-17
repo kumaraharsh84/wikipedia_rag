@@ -174,7 +174,7 @@ wiki/
 
 ```bash
 cp .env.example .env
-# Edit .env and set GROQ_API_KEY=gsk_...
+# Edit .env and set GROQ_API_KEY=<your-groq-key>
 ```
 
 > **Important:** The backend reads all settings from `.env` via `python-dotenv`. Without setting `GROQ_API_KEY`, it silently falls back to the local flan-t5-small model (short, low-quality answers).
@@ -226,17 +226,17 @@ docker compose up --build
 # Default — Groq Cloud (FREE, fast, llama-3.3-70b-versatile)
 # Get a free API key at https://console.groq.com
 LLM_PROVIDER=groq
-GROQ_API_KEY=gsk_...
+GROQ_API_KEY=<your-groq-key>
 GROQ_MODEL=llama-3.3-70b-versatile   # optional override
 
 # OpenAI (gpt-4o-mini by default)
 LLM_PROVIDER=openai
-OPENAI_API_KEY=sk-...
+OPENAI_API_KEY=<your-openai-key>
 OPENAI_MODEL=gpt-4o-mini             # optional override
 
 # Anthropic (Claude Haiku by default)
 LLM_PROVIDER=anthropic
-ANTHROPIC_API_KEY=sk-ant-...
+ANTHROPIC_API_KEY=<your-anthropic-key>
 ANTHROPIC_MODEL=claude-haiku-4-5-20251001   # optional override
 
 # Local — flan-t5-small, CPU, no API key needed (lower quality)
